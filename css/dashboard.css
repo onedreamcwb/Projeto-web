@@ -1,0 +1,70 @@
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* 3 Colunas no Desktop */
+    gap: 1.5rem;
+    padding: 2rem;
+}
+
+.card {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border-left: 5px solid var(--primary-color);
+}
+
+#card-entrada {
+    border-left-color: var(--success-color);
+}
+
+#card-saida {
+    border-left-color: var(--danger-color);
+}
+
+#card-resultado {
+    border-left-color: var(--warning-color);
+}
+
+.card .value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+/* Estilo da Tabela de Movimentações */
+.list-section {
+    padding: 0 2rem 2rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+th,
+td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+th {
+    background-color: #f1f5f9;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+/* Destaque para Categorias específicas [cite: 3] */
+.category-tag {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    background: #e2e8f0;
+}
