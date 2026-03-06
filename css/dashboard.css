@@ -1,9 +1,16 @@
+/* Layout dos Cards de Resumo */
 .summary-cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    /* 3 Colunas no Desktop */
     gap: 1.5rem;
     padding: 2rem;
+}
+
+/* Responsividade Mobile para Cards */
+@media (max-width: 768px) {
+    .summary-cards {
+        grid-template-columns: 1fr; /* Uma coluna no celular */
+    }
 }
 
 .card {
@@ -14,17 +21,9 @@
     border-left: 5px solid var(--primary-color);
 }
 
-#card-entrada {
-    border-left-color: var(--success-color);
-}
-
-#card-saida {
-    border-left-color: var(--danger-color);
-}
-
-#card-resultado {
-    border-left-color: var(--warning-color);
-}
+#card-entrada { border-left-color: var(--success-color); }
+#card-saida { border-left-color: var(--danger-color); }
+#card-resultado { border-left-color: var(--warning-color); }
 
 .card .value {
     display: block;
@@ -33,48 +32,12 @@
     margin-top: 0.5rem;
 }
 
-/* Estilo da Tabela de Movimentações */
-.list-section {
-    padding: 0 2rem 2rem;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--card-bg);
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-}
-
-th,
-td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
-}
-
-th {
-    background-color: #f1f5f9;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    text-transform: uppercase;
-}
-
-/* Destaque para Categorias específicas [cite: 3] */
-.category-tag {
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    background: #e2e8f0;
-}
-
+/* Header do Dashboard (Filtro de Data) */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem 2rem 0;
-    /* Alinhado com o padding dos cards */
 }
 
 .dashboard-header h2 {
@@ -102,16 +65,14 @@ th {
     outline: none;
 }
 
-/* Container Geral dos Gráficos */
+/* Container dos Gráficos */
 .charts-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1.5rem;
     padding: 0 2rem 2rem;
-    /* Alinhamento com o resto do dashboard */
 }
 
-/* O Card (Caixa branca) */
 .chart-card {
     background: var(--card-bg);
     border-radius: var(--radius);
@@ -141,23 +102,20 @@ th {
     width: 100%;
 }
 
-/* O Gráfico em si (Círculo) */
+/* Gráfico de Rosca */
 .donut-chart {
     width: 220px;
     height: 220px;
     border-radius: 50%;
     position: relative;
-    /* Fundo padrão cinza caso não tenha dados */
     background: var(--border-color);
     transition: background 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* O "Buraco" da Rosca (Círculo branco sobreposto) */
 .donut-chart::after {
     content: "";
     position: absolute;
     width: 160px;
-    /* Define a espessura da borda */
     height: 160px;
     background: var(--card-bg);
     border-radius: 50%;
@@ -166,7 +124,6 @@ th {
     transform: translate(-50%, -50%);
 }
 
-/* Texto no meio do gráfico */
 .chart-center {
     position: absolute;
     top: 50%;
@@ -182,7 +139,6 @@ th {
     color: var(--text-main);
 }
 
-/* Legenda (Abaixo do gráfico) */
 .chart-legend {
     width: 100%;
     display: flex;
@@ -208,3 +164,58 @@ th {
     border-radius: 50%;
     flex-shrink: 0;
 }
+
+/* Estilo da Tabela de Movimentações */
+.list-section {
+    padding: 0 2rem 2rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+th, td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+th {
+    background-color: #f1f5f9;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.category-tag {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    background: #e2e8f0;
+}
+
+/* --- NOVOS ESTILOS: Botões de Ação (Editar/Excluir) --- */
+.btn-action {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.4rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    margin-right: 5px;
+}
+
+.btn-action:hover {
+    transform: scale(1.15);
+    background-color: #f1f5f9;
+}
+
+/* Cor específica ao passar o mouse */
+.btn-edit:hover { color: #f59e0b; } /* Amarelo no hover */
+.btn-delete:hover { color: #ef4444; } /* Vermelho no hover */

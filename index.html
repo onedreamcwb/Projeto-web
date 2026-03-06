@@ -52,22 +52,31 @@
             <section class="form-section">
                 <h3>Novo Lançamento</h3>
                 <form id="finance-form">
-                    <input type="text" id="desc" placeholder="Descrição (ex: Aluguel)" required>
-                    <input type="number" id="valor" placeholder="Valor (R$)" step="0.01" required>
-                    <select id="tipo">
-                        <option value="entrada">Entrada</option>
-                        <option value="saida">Saída</option>
-                    </select>
-                    <select id="categoria" required>
-                    </select>
-                    <input type="date" id="data" required>
-                    <div class="form-row-checkbox">
-                        <input type="checkbox" id="is-recurring">
-                        <label for="is-recurring">Despesa Fixa (Repetir todo mês)</label>
-                    </div>
-                    <button type="submit">Adicionar</button>
+    <input type="hidden" id="edit-id">
 
-                </form>
+    <input type="text" id="desc" placeholder="Descrição (ex: Aluguel)" required>
+    <input type="number" id="valor" placeholder="Valor (R$)" step="0.01" required>
+    
+    <select id="tipo">
+        <option value="entrada">Entrada</option>
+        <option value="saida">Saída</option>
+    </select>
+    
+    <select id="categoria" required>
+        </select>
+    
+    <input type="date" id="data" required>
+
+    <div class="form-row-checkbox">
+        <input type="checkbox" id="is-recurring">
+        <label for="is-recurring">Despesa Fixa (Repetir todo mês)</label>
+    </div>
+
+    <div class="form-actions" style="grid-column: 1 / -1; display:flex; gap:10px; margin-top: 10px;">
+        <button type="submit" id="btn-submit">Adicionar</button>
+        <button type="button" id="btn-cancel" style="display:none; background-color: #64748b;">Cancelar</button>
+    </div>
+</form>
             </section>
 
             <section class="list-section">
