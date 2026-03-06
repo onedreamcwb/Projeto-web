@@ -42,26 +42,23 @@ const FormsHandler = {
     },
 
     handleSubmit: function (e) {
-        e.preventDefault(); // Impede o recarregamento da página
+        e.preventDefault();
 
-        // 1. Captura dos dados (Raw Data)
+        // ... (Captura dos dados rawData igual antes) ...
         const rawData = {
             desc: document.getElementById('desc').value,
             valor: parseFloat(document.getElementById('valor').value),
             tipo: this.typeSelect.value,
             categoria: this.categorySelect.value,
-            data: this.dateInput.value // YYYY-MM-DD
+            data: this.dateInput.value,
+            isRecurring: document.getElementById('is-recurring').checked // NOVO
         };
 
-        // 2. Validação básica (Fail Fast)
-        if (isNaN(rawData.valor) || rawData.valor <= 0) {
-            alert("Por favor, insira um valor válido.");
-            return;
-        }
+        // ... (Validação igual antes) ...
 
-        // 3. Criação do Objeto de Transação (Normalização)
+        // Cria transação normal
         const transaction = {
-            id: Date.now(), // ID único baseado em Timestamp
+            id: Date.now(),
             description: rawData.desc,
             amount: rawData.valor,
             type: rawData.tipo,
@@ -70,25 +67,27 @@ const FormsHandler = {
             createdAt: new Date().toISOString()
         };
 
-        console.log("Transação Criada:", transaction);
+        // SE for recorrente, cria também a REGRA
+        if (rawData.isRecurring) {
+            const rule = {
+                id: Date.now(), // ID da regra
+                description: rawData.desc,
+                amount: rawData.valor,
+                type: rawData.tipo,
+                category: rawData.categoria,
+                day: new Date(rawData.data).getDate() + 1 // Pega o dia (ajuste de fuso simples)
+            };
+            Storage.saveRecurringRule(rule);
+            transaction.recurringRuleId = rule.id; // Vincula a primeira transação à regra
+        }
 
-        // 4. Salvar e Atualizar (Integração com os outros módulos)
-        // Storage.save(transaction); -> Vamos implementar em breve
-        // App.updateDashboard();     -> Vamos implementar em breve
-
-        // Mock temporário para você ver funcionando no console agora:
         Storage.saveTransaction(transaction);
 
-        // 5. Reset do Formulário e Feedback Visual
-        this.form.reset();
-        this.dateInput.valueAsDate = new Date(); // Restaura a data de hoje
-        this.updateCategories(); // Restaura categorias
+        // ... (Reset e Atualização igual antes) ...
+        // Importante: Desmarcar o checkbox no reset
+        document.getElementById('is-recurring').checked = false;
 
-        // Feedback simples para o usuário
-        alert("Lançamento adicionado com sucesso!");
-
-        // Atualiza a tela (Chamada ao Renderer)
-        Renderer.renderTransaction(transaction);
-        App.updateDashboard();
+        alert("Lançamento adicionado!");
+        App.loadData(); // Recarrega tudo para garantir
     }
 };

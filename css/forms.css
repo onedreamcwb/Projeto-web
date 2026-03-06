@@ -35,3 +35,20 @@ button[type="submit"] {
 button[type="submit"]:hover {
     filter: brightness(1.1);
 }
+
+.form-row-checkbox {
+    grid-column: 1 / -1;
+    /* Ocupa a linha toda no grid */
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+}
+
+.form-row-checkbox input {
+    width: auto;
+    /* Reseta o width 100% padrão dos inputs */
+    cursor: pointer;
+}

@@ -2,12 +2,13 @@ const App = {
     init: function () {
         console.log("App Iniciado");
 
-        // Inicializa os módulos
         FormsHandler.init();
 
-        // Carrega dados iniciais (se houver)
-        this.loadData();
+        // NOVO: Verifica recorrências ao abrir o app
+        const hasNewData = RecurringManager.processRecurringExpenses();
 
+        // Carrega dados (se houve novos dados, eles aparecerão agora)
+        this.loadData();
     },
     runSimulation: function () {
         // 1. Pega os valores dos inputs
