@@ -163,10 +163,29 @@
         </section>
 
     </main>
-
+<footer class="app-footer">
+    <div class="footer-content">
+        <span class="footer-title">Segurança dos Dados:</span>
+        
+        <div class="footer-actions">
+            <button onclick="DataManager.downloadBackup()" class="btn-backup">
+                💾 Baixar Backup
+            </button>
+            
+            <label for="restore-file" class="btn-restore">
+                📂 Restaurar Dados
+            </label>
+            
+            <input type="file" id="restore-file" class="hidden-input" accept=".json" onchange="DataManager.uploadBackup(this)">
+        </div>
+    </div>
+    
+    <p class="copyright">Desenvolvido com Arquitetura Limpa - 2026</p>
+</footer>
     <script src="js/core/constants.js"></script>
     <script src="js/core/calculator.js"></script>
     <script src="js/data/storage.js"></script>
+    <script src="js/data/dataManager.js"
     <script src="js/ui/renderer.js"></script>
     <script src="js/ui/formsHandler.js"></script>
     <script src="js/core/recurring.js"></script>

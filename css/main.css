@@ -53,3 +53,102 @@ nav button:hover {
     background: var(--primary-color);
     color: white;
 }
+/* --- Rodapé e Área de Backup --- */
+
+.app-footer {
+    margin-top: 3rem;
+    padding: 2rem 0;
+    background-color: #1e293b; /* Slate 800 */
+    color: #f8fafc; /* Slate 50 */
+    border-top: 4px solid var(--primary-color);
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.footer-title {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #cbd5e1; /* Slate 300 */
+}
+
+.footer-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* Botões de Ação do Rodapé */
+.btn-backup, 
+.btn-restore {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+/* Estilo Específico: Backup (Primário) */
+.btn-backup {
+    background-color: var(--primary-color);
+    color: #ffffff;
+}
+
+/* Estilo Específico: Restore (Secundário) */
+.btn-restore {
+    background-color: #475569; /* Slate 600 */
+    color: #ffffff;
+}
+
+/* Hover Effects */
+.btn-backup:hover, 
+.btn-restore:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+/* Input de Arquivo (Escondido visualmente mas acessível) */
+.hidden-input {
+    display: none;
+}
+
+.copyright {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: #64748b; /* Slate 500 */
+}
+
+/* Responsividade Mobile */
+@media (max-width: 600px) {
+    .footer-content {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .footer-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-backup, .btn-restore {
+        width: 100%;
+        justify-content: center;
+    }
+}
