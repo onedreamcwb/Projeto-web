@@ -68,3 +68,36 @@ th {
     font-size: 0.75rem;
     background: #e2e8f0;
 }
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem 0;
+    /* Alinhado com o padding dos cards */
+}
+
+.dashboard-header h2 {
+    font-size: 1.5rem;
+    color: var(--text-main);
+}
+
+.filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--card-bg);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.filter-controls input {
+    border: none;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--primary-color);
+    cursor: pointer;
+    outline: none;
+}

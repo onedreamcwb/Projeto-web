@@ -1,73 +1,79 @@
 const App = {
+    // Estado interno para saber qual mês estamos olhando
+    state: {
+        currentMonth: new Date().toISOString().slice(0, 7) // Ex: "2026-03"
+    },
+
     init: function () {
         console.log("App Iniciado");
 
         FormsHandler.init();
 
-        // NOVO: Verifica recorrências ao abrir o app
-        const hasNewData = RecurringManager.processRecurringExpenses();
+        // Configura o Filtro de Mês
+        const monthFilter = document.getElementById('month-filter');
+        if (monthFilter) {
+            monthFilter.value = this.state.currentMonth; // Define o mês atual no input
 
-        // Carrega dados (se houve novos dados, eles aparecerão agora)
+            // Quando mudar a data, recarrega a tela
+            monthFilter.addEventListener('change', (e) => {
+                this.state.currentMonth = e.target.value;
+                this.updateDashboard(); // Recarrega com o novo filtro
+            });
+        }
+
+        // Processa recorrências (Despesas Fixas)
+        RecurringManager.processRecurringExpenses();
+
         this.loadData();
-    },
-    runSimulation: function () {
-        // 1. Pega os valores dos inputs
-        const initial = parseFloat(document.getElementById('calc-inicial').value) || 0;
-        const monthly = parseFloat(document.getElementById('calc-aporte').value) || 0;
-        const rate = parseFloat(document.getElementById('calc-taxa').value) || 0;
-        const years = parseFloat(document.getElementById('calc-tempo').value) || 0;
-
-        // 2. Chama a calculadora
-        const result = Calculator.calculateCompoundInterest(initial, monthly, rate, years);
-
-        // 3. Mostra os resultados na tela
-        document.getElementById('res-investido').textContent = Renderer.formatCurrency(result.invested);
-        document.getElementById('res-juros').textContent = Renderer.formatCurrency(result.interest);
-        document.getElementById('res-total').textContent = Renderer.formatCurrency(result.total);
-
-        // 4. Mostra a área de resultados (que estava oculta)
-        document.getElementById('calc-results').style.display = 'grid';
     },
 
     loadData: function () {
-        const transactions = Storage.getTransactions();
-
-        // Renderiza cada transação salva na tabela
-        transactions.forEach(tr => Renderer.renderTransaction(tr));
-
-        // Atualiza os totais dos cards
+        // Carrega tudo e atualiza
         this.updateDashboard();
     },
 
     updateDashboard: function () {
-        const transactions = Storage.getTransactions();
+        const allTransactions = Storage.getTransactions();
 
-        // Calcula Totais
-        const totals = Calculator.calculateTotals(transactions);
+        // --- A MÁGICA DO FILTRO ACONTECE AQUI ---
+        // Filtra apenas as transações que começam com "YYYY-MM" selecionado
+        const filteredTransactions = allTransactions.filter(tr =>
+            tr.date.startsWith(this.state.currentMonth)
+        );
 
-        // Calcula Meta de Reserva (Regra dos 6 meses)
-        totals.reserveTarget = Calculator.calculateReserveTarget(transactions);
+        // Calcula totais baseados SOMENTE no mês filtrado
+        const totals = Calculator.calculateTotals(filteredTransactions);
 
-        // Atualiza o DOM
+        // A Reserva de Emergência considera a média histórica (todos os dados), 
+        // mas o progresso considera o saldo atual. Podemos manter assim.
+        totals.reserveTarget = Calculator.calculateReserveTarget(allTransactions); // Média usa histórico
+
+        // Atualiza a tela com os dados FILTRADOS
         Renderer.updateSummary(totals);
-        // ADICIONE ESTA LINHA:
         Renderer.updateSimulator(totals);
+
+        // Atualiza a tabela: Limpa a tabela atual e desenha só as filtradas
+        const tbody = document.querySelector('#transactions-table tbody');
+        tbody.innerHTML = ''; // Limpa tudo
+
+        // Ordena por data (mais recente primeiro)
+        filteredTransactions
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .forEach(tr => Renderer.renderTransaction(tr));
     },
 
-    // Função para alternar abas (Dashboard <-> Simulador)
     switchTab: function (tabName) {
-        // Esconde todas as abas
         document.querySelectorAll('.tab-content').forEach(tab => {
             tab.style.display = 'none';
         });
-
-        // Mostra a aba selecionada
         const selected = document.getElementById(tabName);
         if (selected) selected.style.display = 'block';
-    }
+    },
+
+    // (Mantenha a runSimulation aqui...)
+    runSimulation: function () { /* ... código anterior ... */ }
 };
 
-// Inicializa a aplicação quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', () => {
     App.init();
 });

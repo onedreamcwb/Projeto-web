@@ -22,6 +22,13 @@
 
     <main id="app-content">
         <section id="dashboard" class="tab-content">
+            <div class="dashboard-header">
+                <h2>Visão Geral</h2>
+                <div class="filter-controls">
+                    <label for="month-filter">Período:</label>
+                    <input type="month" id="month-filter">
+                </div>
+            </div>
             <div class="summary-cards">
                 <div class="card" id="card-entrada">Entradas: <span class="value">R$ 0,00</span></div>
                 <div class="card" id="card-saida">Saídas: <span class="value">R$ 0,00</span></div>
@@ -65,7 +72,6 @@
                 </table>
             </section>
         </section>
-
         <section id="simulador" class="tab-content" style="display:none;">
 
             <div class="simulator-card highlight-card">
@@ -75,15 +81,15 @@
                 </div>
                 <div class="card-body">
                     <div class="stat-group">
-                        <label>Sua Média de Gastos</label>
+                        <span class="stat-label">Sua Média de Gastos</span>
                         <span id="sim-media-gastos" class="stat-value">R$ 0,00</span>
                     </div>
                     <div class="stat-group">
-                        <label>Meta da Reserva</label>
+                        <span class="stat-label">Meta da Reserva</span>
                         <span id="sim-meta-reserva" class="stat-value text-blue">R$ 0,00</span>
                     </div>
                     <div class="progress-container">
-                        <label>Status Atual (Saldo em Conta / Meta)</label>
+                        <span class="stat-label">Status Atual (Saldo em Conta / Meta)</span>
                         <div class="progress-bar">
                             <div id="sim-progress-fill" style="width: 0%"></div>
                         </div>
@@ -97,19 +103,19 @@
                 <form id="calc-form">
                     <div class="input-grid">
                         <div class="input-group">
-                            <label>Valor Inicial (R$)</label>
+                            <label for="calc-inicial">Valor Inicial (R$)</label>
                             <input type="number" id="calc-inicial" placeholder="0,00">
                         </div>
                         <div class="input-group">
-                            <label>Aporte Mensal (R$)</label>
+                            <label for="calc-aporte">Aporte Mensal (R$)</label>
                             <input type="number" id="calc-aporte" placeholder="0,00">
                         </div>
                         <div class="input-group">
-                            <label>Taxa de Juros (% ao ano)</label>
+                            <label for="calc-taxa">Taxa de Juros (% ao ano)</label>
                             <input type="number" id="calc-taxa" value="10" step="0.1">
                         </div>
                         <div class="input-group">
-                            <label>Tempo (Anos)</label>
+                            <label for="calc-tempo">Tempo (Anos)</label>
                             <input type="number" id="calc-tempo" value="5">
                         </div>
                     </div>
@@ -132,6 +138,7 @@
                 </div>
             </div>
         </section>
+
     </main>
 
     <script src="js/core/constants.js"></script>

@@ -13,8 +13,16 @@
     border-left-color: var(--primary-color);
 }
 
-.card-header h3 { margin-bottom: 0.5rem; color: var(--text-main); }
-.card-header p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+.card-header h3 {
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+}
+
+.card-header p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
 
 .stat-group {
     display: flex;
@@ -24,12 +32,24 @@
     padding-bottom: 0.5rem;
 }
 
-.stat-value { font-weight: bold; font-size: 1.2rem; }
-.text-blue { color: var(--primary-color); }
-.text-green { color: var(--success-color); }
+.stat-value {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.text-blue {
+    color: var(--primary-color);
+}
+
+.text-green {
+    color: var(--success-color);
+}
 
 /* Barra de Progresso */
-.progress-container { margin-top: 1.5rem; }
+.progress-container {
+    margin-top: 1.5rem;
+}
+
 .progress-bar {
     height: 12px;
     background: #e2e8f0;
@@ -37,6 +57,7 @@
     overflow: hidden;
     margin: 0.5rem 0;
 }
+
 #sim-progress-fill {
     height: 100%;
     background: var(--success-color);
@@ -58,8 +79,16 @@
     margin-bottom: 1.5rem;
 }
 
-.input-group { display: flex; flex-direction: column; }
-.input-group label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
 
 /* Resultados */
 .results-grid {
@@ -79,7 +108,8 @@
 }
 
 .result-box.main-result {
-    background: #ecfdf5; /* Fundo verde claro */
+    background: #ecfdf5;
+    /* Fundo verde claro */
     border: 1px solid var(--success-color);
 }
 
@@ -88,4 +118,9 @@
     font-size: 1.2rem;
     font-weight: bold;
     margin-top: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
 }
