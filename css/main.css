@@ -1,20 +1,23 @@
+/* =========================================
+   1. VARIÁVEIS E RESET GERAL
+   ========================================= */
 :root {
-    /* Paleta de Cores baseada na Planilha */
-    --primary-color: #2563eb;
-    --success-color: #10b981;
-    /* Verde Entrada [cite: 2] */
-    --danger-color: #ef4444;
-    /* Vermelho Saída [cite: 3] */
-    --warning-color: #f59e0b;
-    --bg-color: #faf8fc;
+    --primary-color: #3b82f6;   /* Azul padrão */
+    --secondary-color: #1e293b; /* Azul escuro (Sidebar) */
+    --background-color: #f1f5f9; /* Cinza claro (Fundo) */
     --card-bg: #ffffff;
+    
     --text-main: #1e293b;
     --text-muted: #64748b;
-    --border-color: #e2e8f0;
+    --text-light: #f8fafc;
 
-    /* Espaçamento e Bordas */
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+
     --radius: 8px;
-    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --transition: 0.3s ease;
 }
 
 * {
@@ -24,131 +27,370 @@
 }
 
 body {
-    font-family: 'Inter', system-ui, sans-serif;
-    background-color: var(--bg-color);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--background-color);
     color: var(--text-main);
-    line-height: 1.6;
+    height: 100vh;
+    overflow: hidden; /* Importante: Impede rolagem dupla */
 }
 
-header {
-    background: var(--card-bg);
-    padding: 1rem 2rem;
-    border-bottom: 1px solid var(--border-color);
+/* =========================================
+   2. ESTRUTURA DO LAYOUT (GRID PRINCIPAL)
+   ========================================= */
+.app-container {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    height: 100vh;
+    width: 100vw;
 }
 
-nav button {
-    padding: 0.5rem 1rem;
-    margin-left: 0.5rem;
-    border: 1px solid var(--border-color);
-    background: transparent;
+/* =========================================
+   3. BARRA LATERAL (SIDEBAR)
+   ========================================= */
+.sidebar {
+    width: 260px;
+    background-color: var(--secondary-color);
+    color: var(--text-light);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0; /* Impede que a sidebar encolha */
+    transition: transform var(--transition);
+    z-index: 100;
+}
+
+/* Cabeçalho da Sidebar */
+.sidebar-header {
+    height: 70px; /* Altura fixa para alinhar com header principal */
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #334155;
+    background-color: rgba(0,0,0,0.2);
+}
+
+.sidebar-header h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Botão Fechar (Aparece só no Mobile) */
+.close-sidebar {
+    display: none; 
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
     cursor: pointer;
+}
+
+/* Navegação (Lista de Botões) */
+.sidebar-nav {
+    flex: 1; /* Ocupa todo espaço disponível */
+    padding: 20px 0;
+    overflow-y: auto; /* Scroll se tiver muitos itens */
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 15px 25px;
+    text-align: left;
+    background: none;
+    border: none;
+    color: #cbd5e1; /* Cinza claro */
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 4px solid transparent; /* Indicador ativo invisível */
+}
+
+.nav-item:hover {
+    background-color: #334155;
+    color: white;
+    padding-left: 30px; /* Efeito de movimento leve */
+}
+
+.nav-item.active {
+    background-color: #334155;
+    color: white;
+    border-left-color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Rodapé da Sidebar (Backup) */
+.sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid #334155;
+    display: flex;
+    gap: 10px;
+    background-color: rgba(0,0,0,0.1);
+}
+
+/* Botões pequenos do rodapé */
+.btn-small {
+    flex: 1;
+    font-size: 0.8rem;
+    padding: 8px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    color: white;
+    font-weight: 500;
+    transition: filter 0.2s;
+}
+
+.btn-small:hover { filter: brightness(1.1); }
+.btn-small:nth-child(1) { background-color: var(--primary-color); } /* Backup */
+.btn-small:nth-child(2) { background-color: #475569; } /* Restore */
+
+.hidden-input { display: none; }
+
+/* =========================================
+   4. CONTEÚDO PRINCIPAL (MAIN)
+   ========================================= */
+.main-content {
+    flex: 1; /* Ocupa o restante da tela */
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Cabeçalho Superior (Sticky) */
+.top-header {
+    height: 70px;
+    background: var(--card-bg);
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between; /* Título na esq, Data na dir */
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    flex-shrink: 0;
+    z-index: 90;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#page-title {
+    font-size: 1.5rem;
+    color: var(--text-main);
+}
+
+/* Botão Menu Hambúrguer (Mobile) */
+.menu-toggle {
+    display: none; /* Escondido no Desktop */
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-main);
+    padding: 5px;
+}
+
+/* Área de Rolagem das Abas */
+.tab-content {
+    flex: 1;
+    overflow-y: auto; /* Só o conteúdo rola, o header fica fixo */
+    padding: 30px;
+    /* Animação suave ao trocar de aba */
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Filtro de Data no Topo */
+.date-filter input {
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
     border-radius: var(--radius);
+    font-size: 0.9rem;
+    color: var(--text-main);
+    outline: none;
+    background: #f8fafc;
+    cursor: pointer;
+}
+
+/* =========================================
+   5. RESPONSIVIDADE (MOBILE)
+   ========================================= */
+@media (max-width: 768px) {
+    /* Ajuste da Sidebar para Mobile */
+    .sidebar {
+        position: fixed;
+        height: 100%;
+        left: 0;
+        top: 0;
+        width: 80%; /* Ocupa quase toda a tela */
+        max-width: 300px;
+        transform: translateX(-100%); /* Esconde à esquerda */
+        box-shadow: 4px 0 15px rgba(0,0,0,0.3);
+    }
+    
+    /* Classe adicionada via JS para mostrar sidebar */
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    /* Mostrar botões de controle */
+    .menu-toggle { display: block; }
+    .close-sidebar { display: block; }
+
+    /* Ajustes no Header */
+    .top-header { padding: 0 15px; }
+    #page-title { font-size: 1.1rem; }
+    
+    /* Ajustes de Espaçamento */
+    .tab-content { padding: 15px; }
+}
+/* =========================================
+   6. ESTILOS DO FORMULÁRIO (FINAL - AJUSTADO)
+   ========================================= */
+
+.transaction-form {
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+    border: 1px solid #e2e8f0;
+}
+
+.form-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Distância entre a linha de cima e a de baixo */
+}
+
+/* GRUPO DE INPUTS */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Espaço entre o Label e o Input */
+    width: 100%; /* Garante que o grupo ocupe todo o espaço da célula */
+}
+
+.input-group label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ESTILO DOS CAMPOS (INPUTS E SELECTS) */
+.transaction-form input,
+.transaction-form select {
+    height: 50px !important; /* FORÇA ALTURA GRANDE */
+    padding: 0 15px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #1e293b;
+    background-color: #f8fafc;
+    width: 100%; /* FORÇA LARGURA TOTAL */
+    box-sizing: border-box; /* Garante que o padding não estoure a largura */
     transition: all 0.2s;
 }
 
-nav button:hover {
-    background: var(--primary-color);
-    color: white;
-}
-/* --- Rodapé e Área de Backup --- */
-
-.app-footer {
-    margin-top: 3rem;
-    padding: 2rem 0;
-    background-color: #1e293b; /* Slate 800 */
-    color: #f8fafc; /* Slate 50 */
-    border-top: 4px solid var(--primary-color);
+/* Foco */
+.transaction-form input:focus,
+.transaction-form select:focus {
+    border-color: #3b82f6;
+    background-color: white;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
-.footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;
+/* --- A GRADE MÁGICA (LINHA DE BAIXO) --- */
+.row-grid {
+    display: grid;
+    /* Aqui definimos as larguras relativas: 
+       Valor(1) | Tipo(1) | Categoria(1.5) | Data(1) */
+    grid-template-columns: 1fr 1fr 1.5fr 1fr; 
+    gap: 20px; /* Espaço horizontal entre os campos */
+    align-items: end;
+}
+
+/* RODAPÉ */
+.form-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 1.5rem;
+    padding-top: 25px;
+    margin-top: 5px;
+    border-top: 1px solid #f1f5f9;
 }
 
-.footer-title {
-    font-weight: 600;
-    font-size: 1rem;
-    color: #cbd5e1; /* Slate 300 */
-}
-
-.footer-actions {
+/* Checkbox */
+.checkbox-container {
     display: flex;
-    gap: 1rem;
     align-items: center;
-}
-
-/* Botões de Ação do Rodapé */
-.btn-backup, 
-.btn-restore {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.6rem 1.2rem;
-    border-radius: var(--radius);
-    font-size: 0.9rem;
-    font-weight: bold;
+    gap: 10px;
     cursor: pointer;
+    font-weight: 600;
+    color: #334155;
+    padding: 8px;
+    border-radius: 6px;
+}
+.checkbox-container input {
+    height: 20px !important; 
+    width: 20px !important;
+    cursor: pointer;
+    accent-color: #3b82f6;
+}
+.checkbox-container:hover { background-color: #f1f5f9; }
+
+/* Botões */
+.form-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-submit, .btn-cancel {
+    height: 50px;
+    padding: 0 35px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
     border: none;
-    transition: all 0.2s ease;
-    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Estilo Específico: Backup (Primário) */
-.btn-backup {
-    background-color: var(--primary-color);
-    color: #ffffff;
+.btn-submit { background-color: #3b82f6; color: white; }
+.btn-cancel { background-color: #e2e8f0; color: #475569; display: none; }
+.btn-submit:hover { filter: brightness(1.1); transform: translateY(-2px); }
+.btn-cancel:hover { background-color: #cbd5e1; }
+
+/* RESPONSIVIDADE (Importante para não quebrar em telas menores) */
+@media (max-width: 1024px) {
+    .row-grid {
+        /* No tablet, quebra em 2 linhas de 2 colunas */
+        grid-template-columns: 1fr 1fr; 
+    }
 }
 
-/* Estilo Específico: Restore (Secundário) */
-.btn-restore {
-    background-color: #475569; /* Slate 600 */
-    color: #ffffff;
-}
-
-/* Hover Effects */
-.btn-backup:hover, 
-.btn-restore:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.1);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-}
-
-/* Input de Arquivo (Escondido visualmente mas acessível) */
-.hidden-input {
-    display: none;
-}
-
-.copyright {
-    text-align: center;
-    margin-top: 2rem;
-    font-size: 0.8rem;
-    color: #64748b; /* Slate 500 */
-}
-
-/* Responsividade Mobile */
 @media (max-width: 600px) {
-    .footer-content {
+    .row-grid {
+        /* No celular, tudo um embaixo do outro */
+        grid-template-columns: 1fr; 
+    }
+    .form-footer {
         flex-direction: column;
-        justify-content: center;
-        text-align: center;
+        gap: 15px;
     }
-    
-    .footer-actions {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .btn-backup, .btn-restore {
-        width: 100%;
-        justify-content: center;
-    }
+    .checkbox-container, .btn-submit { width: 100%; justify-content: center; }
 }

@@ -12,206 +12,201 @@
 </head>
 
 <body>
-    <header>
-        <h1>Controle Financeiro 2026</h1>
-        <nav>
-            <button onclick="App.switchTab('dashboard')">Dashboard</button>
-            <button onclick="App.switchTab('simulador')">Simulador</button>
-        </nav>
-    </header>
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>Finanças 2026</h2>
+                <button class="close-sidebar" onclick="App.toggleSidebar()">✕</button>
+            </div>
 
-    <main id="app-content">
-        <section id="dashboard" class="tab-content">
-            <div class="dashboard-header">
-                <h2>Visão Geral</h2>
-                <div class="filter-controls">
-                    <label for="month-filter">Período:</label>
+            <nav class="sidebar-nav">
+                <button class="nav-item active" onclick="App.switchTab('tab-resultados')">
+                    📊 Resultados
+                </button>
+                
+                <button class="nav-item" onclick="App.switchTab('tab-entradas')">
+                    💰 Entradas
+                </button>
+                
+                <button class="nav-item" onclick="App.switchTab('tab-saidas')">
+                    💸 Saídas
+                </button>
+                
+                <button class="nav-item" onclick="App.switchTab('tab-aporte')">
+                    📈 Aporte
+                </button>
+                
+                <button class="nav-item" onclick="App.switchTab('tab-mensal')">
+                    📅 Mensal (Fixo)
+                </button>
+                
+                <button class="nav-item" onclick="App.switchTab('tab-previsao')">
+                    🔮 Previsão
+                </button>
+                
+                <button class="nav-item" onclick="App.switchTab('tab-patrimonio')">
+                    🏦 Patrimônio
+                </button>
+                
+                <button class="nav-item" onclick="App.switchTab('tab-simulador')">
+                    🧮 Simulador
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button onclick="DataManager.downloadBackup()" class="btn-small">💾 Backup</button>
+                <label for="restore-file" class="btn-small" style="cursor:pointer">📂 Restaurar</label>
+                <input type="file" id="restore-file" class="hidden-input" accept=".json" onchange="DataManager.uploadBackup(this)">
+            </div>
+        </aside>
+
+        <main class="main-content">
+            
+            <header class="top-header">
+                <button class="menu-toggle" onclick="App.toggleSidebar()">
+                    ☰ </button>
+                <h1 id="page-title">Visão Geral</h1>
+                
+                <div class="date-filter">
                     <input type="month" id="month-filter">
                 </div>
-            </div>
-            <div class="summary-cards">
-                <div class="card" id="card-entrada">Entradas: <span class="value">R$ 0,00</span></div>
-                <div class="card" id="card-saida">Saídas: <span class="value">R$ 0,00</span></div>
-                <div class="card" id="card-resultado">Resultado: <span class="value">R$ 0,00</span></div>
-            </div>
-            <div class="charts-grid">
-    
-    <div class="chart-card">
-        <h3>Gastos do Mês por Categoria</h3>
-        <div class="chart-container">
-            <div class="donut-chart" id="expense-chart">
-                <div class="chart-center">
-                    <span id="chart-total">R$ 0,00</span>
-                </div>
-            </div>
-            <div class="chart-legend" id="expense-legend"></div>
-        </div>
-    </div>
+            </header>
 
-    <div class="chart-card">
-        <h3>Histórico: Entradas vs Saídas</h3>
-        <div class="chart-container">
-            <div class="bar-chart" id="evolution-chart"></div>
-            
-            <div class="chart-legend">
-                <div class="legend-item">
-                    <span class="color-dot" style="background-color: var(--success-color)"></span>
-                    <span>Entradas</span>
+            <section id="tab-resultados" class="tab-content active">
+                <div class="summary-cards" id="summary-cards">
+                    <div class="card" id="card-entrada">
+                        <h3>Entradas</h3>
+                        <span class="value">R$ 0,00</span>
+                    </div>
+                    <div class="card" id="card-saida">
+                        <h3>Saídas</h3>
+                        <span class="value">R$ 0,00</span>
+                    </div>
+                    <div class="card" id="card-resultado">
+                        <h3>Resultado</h3>
+                        <span class="value">R$ 0,00</span>
+                    </div>
                 </div>
-                <div class="legend-item">
-                    <span class="color-dot" style="background-color: var(--danger-color)"></span>
-                    <span>Saídas</span>
+
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>Gastos por Categoria</h3>
+                        <div class="chart-container">
+                            <div class="donut-chart" id="expense-chart"><div class="chart-center"><span id="chart-total">R$ 0,00</span></div></div>
+                            <div class="chart-legend" id="expense-legend"></div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Histórico: Entradas vs Saídas</h3>
+                        <div class="chart-container">
+                            <div class="bar-chart" id="evolution-chart"></div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-</div>
-
-            <section class="form-section">
-                <h3>Novo Lançamento</h3>
-                <form id="finance-form">
+                <div class="list-section">
+                    <div class="section-header">
+                        <h3>Últimas Movimentações</h3>
+                        </div>
+                    
+                    <form id="finance-form" class="transaction-form">
     <input type="hidden" id="edit-id">
+    
+    <div class="form-body">
+        <div class="input-group full-width">
+            <label>Descrição</label>
+            <input type="text" id="desc" placeholder="Ex: Compras do Mês" required>
+        </div>
 
-    <input type="text" id="desc" placeholder="Descrição (ex: Aluguel)" required>
-    <input type="number" id="valor" placeholder="Valor (R$)" step="0.01" required>
-    
-    <select id="tipo">
-        <option value="entrada">Entrada</option>
-        <option value="saida">Saída</option>
-    </select>
-    
-    <select id="categoria" required>
-        </select>
-    
-    <input type="date" id="data" required>
-
-    <div class="form-row-checkbox">
-        <input type="checkbox" id="is-recurring">
-        <label for="is-recurring">Despesa Fixa (Repetir todo mês)</label>
+        <div class="row-grid">
+            <div class="input-group">
+                <label>Valor (R$)</label>
+                <input type="number" id="valor" placeholder="0,00" step="0.01" required>
+            </div>
+            
+            <div class="input-group">
+                <label>Tipo</label>
+                <select id="tipo">
+                    <option value="entrada">Entrada</option>
+                    <option value="saida" selected>Saída</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label>Categoria</label>
+                <select id="categoria" required></select>
+            </div>
+            
+            <div class="input-group">
+                <label>Data</label>
+                <input type="date" id="data" required>
+            </div>
+        </div>
     </div>
 
-    <div class="form-actions" style="grid-column: 1 / -1; display:flex; gap:10px; margin-top: 10px;">
-        <button type="submit" id="btn-submit">Adicionar</button>
-        <button type="button" id="btn-cancel" style="display:none; background-color: #64748b;">Cancelar</button>
+    <div class="form-footer">
+        <label class="checkbox-container">
+            <input type="checkbox" id="is-recurring">
+            <span class="checkmark"></span>
+            Despesa Fixa (Mensal)
+        </label>
+
+        <div class="form-actions">
+            <button type="button" id="btn-cancel" class="btn-cancel">Cancelar</button>
+            <button type="submit" id="btn-submit" class="btn-submit">Adicionar</button>
+        </div>
     </div>
 </form>
+
+                    <table id="transactions-table">
+                        <thead>
+                            <tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Valor</th><th>Ações</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </section>
 
-            <section class="list-section">
-                <h3>Movimentações do Mês</h3>
-                <table id="transactions-table">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Descrição</th>
-                            <th>Categoria</th>
-                            <th>Valor</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+            <section id="tab-simulador" class="tab-content" style="display: none;">
+                <h2>Simulador de Juros Compostos</h2>
+                <div class="calculator-container">
+                    <div class="input-group">
+                        <label>Valor Inicial</label>
+                        <input type="number" id="calc-inicial">
+                        <label>Aporte Mensal</label>
+                        <input type="number" id="calc-aporte">
+                        <label>Taxa Anual (%)</label>
+                        <input type="number" id="calc-taxa">
+                        <label>Tempo (Anos)</label>
+                        <input type="number" id="calc-tempo">
+                        <button onclick="App.runSimulation()">Calcular</button>
+                    </div>
+                    <div id="calc-results" style="display:none; margin-top:20px;">
+                        <p>Total Investido: <span id="res-investido"></span></p>
+                        <p>Juros: <span id="res-juros"></span></p>
+                        <p class="total-big">Total: <span id="res-total"></span></p>
+                    </div>
+                </div>
             </section>
-        </section>
-        <section id="simulador" class="tab-content" style="display:none;">
 
-            <div class="simulator-card highlight-card">
-                <div class="card-header">
-                    <h3>🛡️ Reserva de Emergência (6 Meses)</h3>
-                    <p>Baseada na sua média de gastos atual</p>
-                </div>
-                <div class="card-body">
-                    <div class="stat-group">
-                        <span class="stat-label">Sua Média de Gastos</span>
-                        <span id="sim-media-gastos" class="stat-value">R$ 0,00</span>
-                    </div>
-                    <div class="stat-group">
-                        <span class="stat-label">Meta da Reserva</span>
-                        <span id="sim-meta-reserva" class="stat-value text-blue">R$ 0,00</span>
-                    </div>
-                    <div class="progress-container">
-                        <span class="stat-label">Status Atual (Saldo em Conta / Meta)</span>
-                        <div class="progress-bar">
-                            <div id="sim-progress-fill" style="width: 0%"></div>
-                        </div>
-                        <span id="sim-progress-text">0% Concluído</span>
-                    </div>
-                </div>
-            </div>
+            <section id="tab-entradas" class="tab-content" style="display: none;"><h2>Gestão de Entradas (Em breve)</h2></section>
+            <section id="tab-saidas" class="tab-content" style="display: none;"><h2>Gestão de Saídas (Em breve)</h2></section>
+            <section id="tab-aporte" class="tab-content" style="display: none;"><h2>Meus Aportes (Em breve)</h2></section>
+            <section id="tab-mensal" class="tab-content" style="display: none;"><h2>Despesas Mensais Fixas (Em breve)</h2></section>
+            <section id="tab-previsao" class="tab-content" style="display: none;"><h2>Planejado vs Realizado (Em breve)</h2></section>
+            <section id="tab-patrimonio" class="tab-content" style="display: none;"><h2>Balanço Patrimonial (Em breve)</h2></section>
 
-            <div class="simulator-container">
-                <h3>📈 Projeção de Investimentos</h3>
-                <form id="calc-form">
-                    <div class="input-grid">
-                        <div class="input-group">
-                            <label for="calc-inicial">Valor Inicial (R$)</label>
-                            <input type="number" id="calc-inicial" placeholder="0,00">
-                        </div>
-                        <div class="input-group">
-                            <label for="calc-aporte">Aporte Mensal (R$)</label>
-                            <input type="number" id="calc-aporte" placeholder="0,00">
-                        </div>
-                        <div class="input-group">
-                            <label for="calc-taxa">Taxa de Juros (% ao ano)</label>
-                            <input type="number" id="calc-taxa" value="10" step="0.1">
-                        </div>
-                        <div class="input-group">
-                            <label for="calc-tempo">Tempo (Anos)</label>
-                            <input type="number" id="calc-tempo" value="5">
-                        </div>
-                    </div>
-                    <button type="button" onclick="App.runSimulation()">Calcular Futuro</button>
-                </form>
-
-                <div id="calc-results" class="results-grid" style="display:none;">
-                    <div class="result-box">
-                        <small>Total Investido</small>
-                        <span id="res-investido">R$ 0,00</span>
-                    </div>
-                    <div class="result-box">
-                        <small>Total em Juros</small>
-                        <span id="res-juros" class="text-green">R$ 0,00</span>
-                    </div>
-                    <div class="result-box main-result">
-                        <small>Montante Final</small>
-                        <span id="res-total">R$ 0,00</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-<footer class="app-footer">
-    <div class="footer-content">
-        <span class="footer-title">Segurança dos Dados:</span>
-        
-        <div class="footer-actions">
-            <button onclick="DataManager.downloadBackup()" class="btn-backup">
-                💾 Baixar Backup
-            </button>
-            
-            <label for="restore-file" class="btn-restore">
-                📂 Restaurar Dados
-            </label>
-            
-            <input type="file" id="restore-file" class="hidden-input" accept=".json" onchange="DataManager.uploadBackup(this)">
-        </div>
+        </main>
     </div>
-    
-    <p class="copyright">Desenvolvido com Arquitetura Limpa - 2026</p>
-</footer>
+
     <script src="js/core/constants.js"></script>
     <script src="js/core/calculator.js"></script>
     <script src="js/core/recurring.js"></script>
-    
     <script src="js/data/storage.js"></script>
     <script src="js/data/dataManager.js"></script>
-    
-    <script src="js/ui/renderer.js"></script> 
+    <script src="js/ui/renderer.js"></script>
     <script src="js/ui/formsHandler.js"></script>
     <script src="js/ui/charts.js"></script>
-    
     <script src="js/app.js"></script>
 </body>
 
