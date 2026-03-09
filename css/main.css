@@ -254,30 +254,33 @@ body {
     .tab-content { padding: 15px; }
 }
 /* =========================================
-   6. ESTILOS DO FORMULÁRIO (FINAL - AJUSTADO)
+   6. ESTILOS DO FORMULÁRIO (CORREÇÃO FINAL)
    ========================================= */
 
-.transaction-form {
+/* O Container do Formulário */
+#finance-form.transaction-form {
     background-color: white;
     padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     margin-bottom: 30px;
     border: 1px solid #e2e8f0;
+    width: 100%; /* Garante que o container ocupe a tela */
+    box-sizing: border-box;
 }
 
 .form-body {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Distância entre a linha de cima e a de baixo */
+    gap: 20px;
 }
 
-/* GRUPO DE INPUTS */
+/* Grupos de Input */
 .input-group {
     display: flex;
     flex-direction: column;
-    gap: 8px; /* Espaço entre o Label e o Input */
-    width: 100%; /* Garante que o grupo ocupe todo o espaço da célula */
+    gap: 8px;
+    width: 100%; /* FORÇA O GRUPO A OCUPAR A CÉLULA */
 }
 
 .input-group label {
@@ -285,41 +288,39 @@ body {
     font-weight: 700;
     color: #64748b;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
 /* ESTILO DOS CAMPOS (INPUTS E SELECTS) */
-.transaction-form input,
-.transaction-form select {
-    height: 50px !important; /* FORÇA ALTURA GRANDE */
+/* Usamos #finance-form para garantir prioridade sobre qualquer outro CSS */
+#finance-form input,
+#finance-form select {
+    height: 50px !important; /* Altura Fixa */
     padding: 0 15px;
     border: 2px solid #e2e8f0;
     border-radius: 8px;
     font-size: 1rem;
     color: #1e293b;
     background-color: #f8fafc;
-    width: 100%; /* FORÇA LARGURA TOTAL */
-    box-sizing: border-box; /* Garante que o padding não estoure a largura */
-    transition: all 0.2s;
+    width: 100% !important; /* FORÇA LARGURA TOTAL */
+    box-sizing: border-box;
+    display: block; /* Garante comportamento de bloco */
 }
 
-/* Foco */
-.transaction-form input:focus,
-.transaction-form select:focus {
+#finance-form input:focus,
+#finance-form select:focus {
     border-color: #3b82f6;
     background-color: white;
     outline: none;
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
-/* --- A GRADE MÁGICA (LINHA DE BAIXO) --- */
+/* --- A GRADE (Onde a mágica acontece) --- */
 .row-grid {
     display: grid;
-    /* Aqui definimos as larguras relativas: 
-       Valor(1) | Tipo(1) | Categoria(1.5) | Data(1) */
-    grid-template-columns: 1fr 1fr 1.5fr 1fr; 
-    gap: 20px; /* Espaço horizontal entre os campos */
-    align-items: end;
+    /* Define colunas proporcionais: Valor(1) | Tipo(1) | Categoria(2) | Data(1) */
+    grid-template-columns: 1fr 1fr 2fr 1fr; 
+    gap: 20px;
+    width: 100%;
 }
 
 /* RODAPÉ */
@@ -328,7 +329,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding-top: 25px;
-    margin-top: 5px;
+    margin-top: 10px;
     border-top: 1px solid #f1f5f9;
 }
 
@@ -337,19 +338,19 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    cursor: pointer;
     font-weight: 600;
     color: #334155;
-    padding: 8px;
+    cursor: pointer;
+    padding: 10px;
     border-radius: 6px;
 }
-.checkbox-container input {
-    height: 20px !important; 
-    width: 20px !important;
-    cursor: pointer;
-    accent-color: #3b82f6;
-}
 .checkbox-container:hover { background-color: #f1f5f9; }
+.checkbox-container input {
+    height: 20px !important;
+    width: 20px !important;
+    accent-color: #3b82f6;
+    margin: 0;
+}
 
 /* Botões */
 .form-actions {
@@ -375,22 +376,22 @@ body {
 .btn-submit:hover { filter: brightness(1.1); transform: translateY(-2px); }
 .btn-cancel:hover { background-color: #cbd5e1; }
 
-/* RESPONSIVIDADE (Importante para não quebrar em telas menores) */
+/* RESPONSIVIDADE */
 @media (max-width: 1024px) {
     .row-grid {
-        /* No tablet, quebra em 2 linhas de 2 colunas */
-        grid-template-columns: 1fr 1fr; 
+        grid-template-columns: 1fr 1fr; /* Tablet: 2 por linha */
     }
 }
 
 @media (max-width: 600px) {
     .row-grid {
-        /* No celular, tudo um embaixo do outro */
-        grid-template-columns: 1fr; 
+        grid-template-columns: 1fr; /* Celular: 1 por linha */
     }
     .form-footer {
         flex-direction: column;
         gap: 15px;
+        align-items: stretch;
     }
-    .checkbox-container, .btn-submit { width: 100%; justify-content: center; }
+    .checkbox-container { justify-content: center; }
+    .btn-submit { width: 100%; }
 }
