@@ -56,7 +56,8 @@ const App = {
 
         // 5. Atualiza Gráficos (se o módulo existir)
         if (typeof Charts !== 'undefined') {
-            Charts.updateCharts(filteredTransactions);
+            // O ERRO GERALMENTE ESTÁ AQUI: Precisa ter os DOIS argumentos separados por vírgula
+            Charts.updateCharts(filteredTransactions, allTransactions);
         }
         
         // 6. Atualiza a Tabela (Limpa e desenha as filtradas)
