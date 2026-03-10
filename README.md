@@ -9,8 +9,6 @@ Um sistema completo de Gestão Financeira Pessoal (ERP) construído do zero. O o
 
 ## 📸 Preview do Projeto
 
-> **Nota para você, Gustavo:** Para adicionar as imagens aqui no GitHub, basta editar este arquivo pelo site do GitHub e arrastar as imagens do seu computador para dentro da caixa de texto. Ele vai gerar um link automático. Substitua os textos abaixo pelos links gerados!
-
 <p align="center">
   <img src="assets/images/Dashboards/Dashboard.png" width="100%" title="Versão Mobile">
   <br>
@@ -19,7 +17,7 @@ Um sistema completo de Gestão Financeira Pessoal (ERP) construído do zero. O o
 <br>
 
 <p align="center">
-  <img src="assets/images/Dashboards/dashboard mobile.png" width="100%" title="Versão Mobile">
+  <img src="assets/images/Dashboards/dashboard mobile.png" width="45%" title="Versão Mobile">
   <br>
   <em>Dashboard Mobile inicial.</em>
 </p>
