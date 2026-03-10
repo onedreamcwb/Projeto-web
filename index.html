@@ -191,7 +191,43 @@
             <section id="tab-entradas" class="tab-content" style="display: none;"><h2>Gestão de Entradas (Em breve)</h2></section>
             <section id="tab-saidas" class="tab-content" style="display: none;"><h2>Gestão de Saídas (Em breve)</h2></section>
             <section id="tab-aporte" class="tab-content" style="display: none;"><h2>Meus Aportes (Em breve)</h2></section>
-            <section id="tab-mensal" class="tab-content" style="display: none;"><h2>Despesas Mensais Fixas (Em breve)</h2></section>
+            <section id="tab-mensal" class="tab-content" style="display: none;">
+                <div style="margin-bottom: 25px;">
+                    <h2 style="color: #1e293b; font-size: 1.5rem; margin-bottom: 8px;">Painel de Contas Fixas</h2>
+                    <p style="color: #64748b;">Acompanhe e gerencie assinaturas, aluguéis e receitas que se repetem automaticamente todo mês.</p>
+                </div>
+
+                <div class="summary-cards" style="margin-bottom: 30px;">
+                    <div class="card">
+                        <h3 style="color: #64748b; font-size: 0.9rem;">Receitas Fixas (Garantidas)</h3>
+                        <span class="value" id="mensal-entrada-total" style="color: var(--success-color);">R$ 0,00</span>
+                    </div>
+                    <div class="card">
+                        <h3 style="color: #64748b; font-size: 0.9rem;">Despesas Fixas (Comprometido)</h3>
+                        <span class="value" id="mensal-saida-total" style="color: var(--danger-color);">R$ 0,00</span>
+                    </div>
+                </div>
+
+                <div class="list-section">
+                    <div class="section-header" style="margin-bottom: 15px;">
+                        <h3>Minhas Contas Ativas</h3>
+                        </div>
+                    
+                    <table id="recurring-table" style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <thead style="background: #f8fafc; text-align: left;">
+                            <tr>
+                                <th style="padding: 15px; border-bottom: 2px solid #e2e8f0; color: #64748b;">Descrição</th>
+                                <th style="padding: 15px; border-bottom: 2px solid #e2e8f0; color: #64748b;">Categoria</th>
+                                <th style="padding: 15px; border-bottom: 2px solid #e2e8f0; color: #64748b;">Tipo</th>
+                                <th style="padding: 15px; border-bottom: 2px solid #e2e8f0; color: #64748b;">Valor Mensal</th>
+                                <th style="padding: 15px; border-bottom: 2px solid #e2e8f0; color: #64748b;">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+            </section>
             <section id="tab-previsao" class="tab-content" style="display: none;"><h2>Planejado vs Realizado (Em breve)</h2></section>
             <section id="tab-patrimonio" class="tab-content" style="display: none;"><h2>Balanço Patrimonial (Em breve)</h2></section>
 

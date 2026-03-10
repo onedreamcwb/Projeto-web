@@ -163,6 +163,10 @@ const App = {
         if (sidebar) {
             sidebar.classList.remove('open');
         }
+        // Se abriu a aba Mensal, carrega os dados dela
+        if (tabId === 'tab-mensal') {
+            this.updateRecurringTab();
+        }
     },
 
     // Abre/Fecha a sidebar no Mobile (Botão Hambúrguer)
@@ -170,6 +174,83 @@ const App = {
         const sidebar = document.getElementById('sidebar');
         if (sidebar) {
             sidebar.classList.toggle('open');
+        }
+    },
+    // --- LÓGICA DA ABA MENSAL (CONTAS FIXAS) ---
+
+    updateRecurringTab: function() {
+        if (typeof Storage === 'undefined') return;
+        
+        // Pega as regras do banco de dados
+        const rules = Storage.getRecurringRules() || [];
+        
+        let totalEntradas = 0;
+        let totalSaidas = 0;
+        
+        const tbody = document.querySelector('#recurring-table tbody');
+        if (!tbody) return;
+        
+        tbody.innerHTML = ''; // Limpa a tabela
+        
+        if (rules.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px; color: #64748b;">Nenhuma conta fixa cadastrada no momento.</td></tr>';
+        }
+        
+        rules.forEach(rule => {
+            // Soma para os cards
+            if (rule.type === 'entrada') totalEntradas += Number(rule.amount);
+            if (rule.type === 'saida') totalSaidas += Number(rule.amount);
+            
+            // Cria a linha da tabela
+            const tr = document.createElement('tr');
+            tr.style.borderBottom = "1px solid #f1f5f9";
+            
+            const corValor = rule.type === 'entrada' ? 'var(--success-color)' : 'var(--danger-color)';
+            const valorFormatado = Number(rule.amount).toLocaleString('pt-BR', {minimumFractionDigits: 2});
+
+            tr.innerHTML = `
+                <td style="padding: 15px; font-weight: 600; color: #1e293b;">${rule.description}</td>
+                <td style="padding: 15px;"><span style="background: #e2e8f0; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; color: #475569;">${rule.category}</span></td>
+                <td style="padding: 15px; text-transform: capitalize; color: #64748b;">${rule.type}</td>
+                <td style="padding: 15px; font-weight: bold; color: ${corValor};">R$ ${valorFormatado}</td>
+                <td style="padding: 15px;">
+                    <button onclick="App.deleteRecurringRule('${rule.id}')" style="background: none; border: none; cursor: pointer; font-size: 1.2rem; transition: transform 0.2s;" title="Cancelar Conta Fixa" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">🗑️</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+        
+        // Atualiza os Cards de Resumo
+        document.getElementById('mensal-entrada-total').textContent = `R$ ${totalEntradas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+        document.getElementById('mensal-saida-total').textContent = `R$ ${totalSaidas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+    },
+
+    deleteRecurringRule: function(id) {
+        if (confirm("Tem certeza que deseja CANCELAR esta conta fixa?\n\nEla não será mais gerada nos próximos meses. (As contas dos meses anteriores não serão apagadas).")) {
+            
+            // 1. Puxa as regras atuais
+            let rules = Storage.getRecurringRules() || [];
+            
+            // 2. CORREÇÃO DE BUG: Converte ambos para Texto (String) para não dar erro de tipagem
+            rules = rules.filter(r => String(r.id) !== String(id));
+            
+            // 3. Salva no banco de dados local com segurança
+            // Verifica se o Storage tem uma função própria, senão salva direto no LocalStorage
+            if (typeof Storage.saveRecurringRules === 'function') {
+                Storage.saveRecurringRules(rules);
+            } else {
+                // Tenta as chaves que criamos nas etapas anteriores
+                localStorage.setItem('finance_recurring_rules', JSON.stringify(rules));
+                localStorage.setItem('finance_recurring', JSON.stringify(rules)); 
+            }
+            
+            // 4. Atualiza a tela imediatamente
+            this.updateRecurringTab();
+            
+            // Atualiza também os cards da aba Resultados para refletir qualquer mudança global
+            this.updateDashboard(); 
+            
+            alert("Conta fixa cancelada com sucesso!");
         }
     }
 };
