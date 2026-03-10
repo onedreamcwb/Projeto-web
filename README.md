@@ -11,14 +11,13 @@ Um sistema completo de Gestão Financeira Pessoal (ERP) construído do zero. O o
 
 > **Nota para você, Gustavo:** Para adicionar as imagens aqui no GitHub, basta editar este arquivo pelo site do GitHub e arrastar as imagens do seu computador para dentro da caixa de texto. Ele vai gerar um link automático. Substitua os textos abaixo pelos links gerados!
 
-![Visão Geral do Dashboard](COLE_AQUI_O_LINK_DA_IMAGEM_DO_PC)
-*Dashboard principal mostrando resumos e gráficos gerados nativamente.*
-
 <p align="center">
-  <img src="COLE_AQUI_O_LINK_DA_IMAGEM_DO_CELULAR" width="250" title="Versão Mobile">
+  <img src="assets/images/Dashboards/Dashboard.png" width="100%" title="Versão Mobile">
   <br>
-  <em>Layout 100% Responsivo com Sidebar Mobile</em>
+  <em>Dashboard principal mostrando resumos e gráficos gerados nativamente.</em>
 </p>
+
+
 
 ## 🎯 Motivação
 A maioria dos aplicativos financeiros exige cadastros demorados, dependem de internet ou guardam seus dados em servidores de terceiros. A proposta do **Finanças 2026** é ser uma ferramenta:
