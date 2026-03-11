@@ -1,85 +1,99 @@
 const FormsHandler = {
-    form: document.getElementById('finance-form'),
-    typeSelect: document.getElementById('tipo'),
-    categorySelect: document.getElementById('categoria'),
-    dateInput: document.getElementById('data'),
-    
-    editIdInput: document.getElementById('edit-id'),
-    submitBtn: document.getElementById('btn-submit'),
-    cancelBtn: document.getElementById('btn-cancel'),
-
     init: function() {
-        if (!this.form) return;
+        this.formEntrada = document.getElementById('form-entrada');
+        this.formSaida = document.getElementById('form-saida');
 
-        this.dateInput.valueAsDate = new Date();
-        
-        this.typeSelect.addEventListener('change', () => this.updateCategories());
-        this.form.addEventListener('submit', (e) => this.handleSubmit(e));
-        
-        if (this.cancelBtn) {
-            this.cancelBtn.addEventListener('click', () => this.cancelEdit());
+        // Configura Formulário de Entradas
+        if (this.formEntrada) {
+            this.populateCategories('entrada', 'cat-entrada');
+            document.getElementById('data-entrada').valueAsDate = new Date();
+            
+            this.formEntrada.addEventListener('submit', (e) => this.handleSubmit(e, 'entrada'));
+            document.getElementById('btn-cancel-entrada').addEventListener('click', () => this.cancelEdit('entrada'));
         }
 
-        this.updateCategories();
+        // Configura Formulário de Saídas
+        if (this.formSaida) {
+            this.populateCategories('saida', 'cat-saida');
+            document.getElementById('data-saida').valueAsDate = new Date();
+            
+            this.formSaida.addEventListener('submit', (e) => this.handleSubmit(e, 'saida'));
+            document.getElementById('btn-cancel-saida').addEventListener('click', () => this.cancelEdit('saida'));
+        }
     },
 
-    updateCategories: function(selectedCategory = null) {
-        this.categorySelect.innerHTML = '';
-        const type = this.typeSelect.value;
+    populateCategories: function(type, selectId, selectedValue = null) {
+        const select = document.getElementById(selectId);
+        if (!select) return;
+        
+        select.innerHTML = '';
         const categories = type === 'entrada' ? CONFIG.CATEGORIAS_ENTRADA : CONFIG.CATEGORIAS_SAIDA;
 
         categories.forEach(cat => {
             const option = document.createElement('option');
             option.value = cat;
             option.textContent = cat;
-            this.categorySelect.appendChild(option);
+            select.appendChild(option);
         });
 
-        if (selectedCategory) {
-            this.categorySelect.value = selectedCategory;
-        }
+        if (selectedValue) select.value = selectedValue;
     },
 
     loadForEdit: function(transaction) {
-        this.editIdInput.value = transaction.id;
-        document.getElementById('desc').value = transaction.description;
-        document.getElementById('valor').value = transaction.amount;
-        this.typeSelect.value = transaction.type;
-        this.dateInput.value = transaction.date;
+        const type = transaction.type; // Descobre se é 'entrada' ou 'saida'
         
-        this.updateCategories(transaction.category);
+        // Preenche os campos do formulário correspondente
+        document.getElementById(`edit-id-${type}`).value = transaction.id;
+        document.getElementById(`desc-${type}`).value = transaction.description;
+        document.getElementById(`valor-${type}`).value = transaction.amount;
+        document.getElementById(`data-${type}`).value = transaction.date;
+        
+        this.populateCategories(type, `cat-${type}`, transaction.category);
 
-        this.submitBtn.textContent = "Salvar Alteração";
-        this.submitBtn.style.backgroundColor = "#f59e0b";
-        this.cancelBtn.style.display = "block";
+        // Muda botões visualmente para modo "Edição"
+        const submitBtn = document.getElementById(`btn-submit-${type}`);
+        const cancelBtn = document.getElementById(`btn-cancel-${type}`);
         
-        this.form.scrollIntoView({ behavior: 'smooth' });
+        submitBtn.textContent = "Salvar Alteração";
+        submitBtn.style.backgroundColor = "var(--warning-color)"; // Amarelo
+        submitBtn.style.color = "white"; 
+        cancelBtn.style.display = "block";
+        
+        // Dá scroll suave até o formulário
+        document.getElementById(`form-${type}`).scrollIntoView({ behavior: 'smooth' });
     },
 
-    cancelEdit: function() {
-        this.form.reset();
-        this.editIdInput.value = '';
-        this.dateInput.valueAsDate = new Date();
-        this.updateCategories();
+    cancelEdit: function(type) {
+        const form = document.getElementById(`form-${type}`);
+        form.reset();
         
-        this.submitBtn.textContent = "Adicionar";
-        this.submitBtn.style.backgroundColor = "";
-        this.cancelBtn.style.display = "none";
+        document.getElementById(`edit-id-${type}`).value = '';
+        document.getElementById(`data-${type}`).valueAsDate = new Date();
+        this.populateCategories(type, `cat-${type}`);
+        
+        const submitBtn = document.getElementById(`btn-submit-${type}`);
+        const cancelBtn = document.getElementById(`btn-cancel-${type}`);
+        
+        // Retorna as cores normais
+        submitBtn.textContent = type === 'entrada' ? "Adicionar Entrada" : "Adicionar Saída";
+        submitBtn.style.backgroundColor = type === 'entrada' ? "var(--success-color)" : "var(--danger-color)";
+        cancelBtn.style.display = "none";
     },
 
-    handleSubmit: function(e) {
+    handleSubmit: function(e, type) {
         e.preventDefault();
 
-        const editId = this.editIdInput.value;
+        const editId = document.getElementById(`edit-id-${type}`).value;
         const isEditing = !!editId;
 
         const rawData = {
-            desc: document.getElementById('desc').value,
-            valor: parseFloat(document.getElementById('valor').value),
-            tipo: this.typeSelect.value,
-            categoria: this.categorySelect.value,
-            data: this.dateInput.value,
-            isRecurring: document.getElementById('is-recurring') ? document.getElementById('is-recurring').checked : false
+            desc: document.getElementById(`desc-${type}`).value,
+            valor: parseFloat(document.getElementById(`valor-${type}`).value),
+            tipo: type, // Pega automaticamente baseado na aba em que está!
+            categoria: document.getElementById(`cat-${type}`).value,
+            data: document.getElementById(`data-${type}`).value,
+            // Checkbox só existe no form de saída
+            isRecurring: type === 'saida' && document.getElementById('is-recurring-saida') ? document.getElementById('is-recurring-saida').checked : false
         };
 
         if (isNaN(rawData.valor) || rawData.valor <= 0) {
@@ -88,7 +102,6 @@ const FormsHandler = {
         }
 
         if (isEditing) {
-            // Edição
             const updatedTransaction = {
                 id: editId,
                 description: rawData.desc,
@@ -100,11 +113,10 @@ const FormsHandler = {
             };
             
             Storage.updateTransaction(updatedTransaction);
-            alert("Transação atualizada com sucesso!");
-            this.cancelEdit();
+            alert("Alteração salva com sucesso!");
+            this.cancelEdit(type);
 
         } else {
-            // Criação Nova
             const newTransaction = {
                 id: Date.now(),
                 description: rawData.desc,
@@ -115,21 +127,16 @@ const FormsHandler = {
                 createdAt: new Date().toISOString()
             };
 
-            // --- LÓGICA DE RECORRÊNCIA CORRIGIDA ---
+            // Lógica de Recorrência (Apenas Saídas)
             if (rawData.isRecurring) {
-                // Calcula a chave do mês atual (ex: "2026-03") baseada na data escolhida
-                // Isso evita que o sistema gere de novo se a data for hoje
                 const transactionMonth = rawData.data.slice(0, 7); 
-
                 const rule = {
                     id: Date.now(),
                     description: rawData.desc,
                     amount: rawData.valor,
                     type: rawData.tipo,
                     category: rawData.categoria,
-                    day: new Date(rawData.data).getDate() + 1, // Ajuste simples de fuso dia
-                    // AQUI ESTÁ A CORREÇÃO:
-                    // Já nasce dizendo: "Este mês está pago!"
+                    day: new Date(rawData.data).getDate() + 1,
                     generationHistory: [transactionMonth] 
                 };
                 Storage.saveRecurringRule(rule);
@@ -137,12 +144,8 @@ const FormsHandler = {
             }
 
             Storage.saveTransaction(newTransaction);
-            
-            this.form.reset();
-            this.dateInput.valueAsDate = new Date();
-            this.updateCategories();
-            
-            alert("Lançamento adicionado!");
+            this.cancelEdit(type); // Limpa o form
+            alert(`${type === 'entrada' ? 'Entrada' : 'Saída'} registrada com sucesso!`);
         }
 
         App.loadData();
