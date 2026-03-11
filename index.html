@@ -73,18 +73,25 @@
             </header>
 
             <section id="tab-resultados" class="tab-content active">
-                <div class="summary-cards" id="summary-cards">
-                    <div class="card" id="card-entrada">
+                <div class="summary-cards" id="summary-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                    <div class="card" id="card-entrada" style="border-left: 4px solid var(--success-color);">
                         <h3>Entradas</h3>
-                        <span class="value">R$ 0,00</span>
+                        <span class="value" style="color: var(--success-color);">R$ 0,00</span>
                     </div>
-                    <div class="card" id="card-saida">
+                    
+                    <div class="card" id="card-saida" style="border-left: 4px solid var(--danger-color);">
                         <h3>Saídas</h3>
-                        <span class="value">R$ 0,00</span>
+                        <span class="value" style="color: var(--danger-color);">R$ 0,00</span>
                     </div>
-                    <div class="card" id="card-resultado">
-                        <h3>Resultado</h3>
-                        <span class="value">R$ 0,00</span>
+                    
+                    <div class="card" id="card-aporte-dash" style="border-left: 4px solid #3b82f6;">
+                        <h3>Aportes</h3>
+                        <span class="value" style="color: #3b82f6;">R$ 0,00</span>
+                    </div>
+                    
+                    <div class="card" id="card-resultado" style="border-left: 4px solid #f59e0b;">
+                        <h3>Saldo Livre</h3>
+                        <span class="value" id="valor-saldo-livre">R$ 0,00</span>
                     </div>
                 </div>
 

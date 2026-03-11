@@ -64,6 +64,26 @@ const App = {
         
         // 4. Atualiza Interface (Cards e Barra de Progresso)
         Renderer.updateSummary(totals);
+        // --- INTEGRAÇÃO DOS APORTES NO DASHBOARD PRINCIPAL ---
+        const allAportes = JSON.parse(localStorage.getItem('finance_aportes') || '[]');
+        const aportesMes = allAportes.filter(a => a.date.startsWith(this.state.currentMonth));
+        const totalAportes = aportesMes.reduce((acc, a) => acc + Number(a.amount), 0);
+
+        // Atualiza o Card de Aportes no Dashboard
+        const cardAporteDash = document.querySelector('#card-aporte-dash .value');
+        if (cardAporteDash) {
+            cardAporteDash.textContent = Renderer.formatCurrency(totalAportes);
+        }
+
+        // Calcula o Saldo Livre (Entradas - Saídas - Aportes)
+        const saldoLivre = totals.balance - totalAportes;
+        const cardSaldoLivre = document.getElementById('valor-saldo-livre');
+        
+        if (cardSaldoLivre) {
+            cardSaldoLivre.textContent = Renderer.formatCurrency(saldoLivre);
+            // Fica vermelho se o saldo livre for negativo, e verde se sobrar dinheiro
+            cardSaldoLivre.style.color = saldoLivre >= 0 ? 'var(--success-color)' : 'var(--danger-color)';
+        }
         Renderer.updateSimulator(totals);
 
         // 5. Atualiza Gráficos (Envia dados do mês E histórico completo)
