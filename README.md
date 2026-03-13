@@ -24,7 +24,6 @@ Um Sistema de Gestão Financeira Pessoal (ERP) de ponta a ponta, construído do 
 
 ### 4. Modo Mobile (Responsivo)
 
-> _Coloque aqui um print da tela do sistema rodando na vertical (formato celular), mostrando a adaptação do CSS Grid/Flexbox._
 > ![Versão Mobile](assets/images/Dashboards/dashboard%20mobile.png)
 
 ---
