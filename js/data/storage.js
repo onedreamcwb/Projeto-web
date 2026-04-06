@@ -1,70 +1,60 @@
 const Storage = {
-    // Keys do LocalStorage (Constantes para evitar erros de digitação)
     KEYS: {
         TRANSACTIONS: 'finance_transactions',
         RULES: 'finance_recurring_rules'
     },
 
-    // --- MÉTODOS DE TRANSAÇÃO (CRUD) ---
-
-    // 1. LER (Read) - Pega todas as transações
+    // --- TRANSAÇÕES (CRUD) ---
     getTransactions: function() {
-        const data = localStorage.getItem(this.KEYS.TRANSACTIONS);
-        return JSON.parse(data) || [];
+        return JSON.parse(localStorage.getItem(this.KEYS.TRANSACTIONS)) || [];
     },
 
-    // 2. LER POR ID - Pega uma específica para edição
     getTransactionById: function(id) {
-        const transactions = this.getTransactions();
-        // Converte para String para garantir que a comparação funcione (número vs texto)
-        return transactions.find(t => String(t.id) === String(id));
+        return this.getTransactions().find(t => String(t.id) === String(id));
     },
 
-    // 3. CRIAR (Create) - Salva uma nova
     saveTransaction: function(transaction) {
-        const transactions = this.getTransactions();
-        transactions.push(transaction);
-        localStorage.setItem(this.KEYS.TRANSACTIONS, JSON.stringify(transactions));
+        const list = this.getTransactions();
+        list.push(transaction);
+        localStorage.setItem(this.KEYS.TRANSACTIONS, JSON.stringify(list));
     },
 
-    // 4. ATUALIZAR (Update) - Substitui uma existente
-    updateTransaction: function(updatedTransaction) {
-        let transactions = this.getTransactions();
-        
-        // Encontra o índice da transação antiga
-        const index = transactions.findIndex(t => String(t.id) === String(updatedTransaction.id));
-        
+    updateTransaction: function(updated) {
+        let list = this.getTransactions();
+        const index = list.findIndex(t => String(t.id) === String(updated.id));
         if (index !== -1) {
-            // Substitui a antiga pela nova
-            transactions[index] = updatedTransaction;
-            localStorage.setItem(this.KEYS.TRANSACTIONS, JSON.stringify(transactions));
-        } else {
-            console.error("Erro: Tentativa de atualizar transação inexistente ID:", updatedTransaction.id);
+            list[index] = updated;
+            localStorage.setItem(this.KEYS.TRANSACTIONS, JSON.stringify(list));
         }
     },
 
-    // 5. DELETAR (Delete) - Remove uma transação
     deleteTransaction: function(id) {
-        let transactions = this.getTransactions();
-        
-        // Filtra mantendo apenas as que NÃO têm o ID informado
-        const newTransactions = transactions.filter(t => String(t.id) !== String(id));
-        
-        localStorage.setItem(this.KEYS.TRANSACTIONS, JSON.stringify(newTransactions));
+        let list = this.getTransactions();
+        const newList = list.filter(t => String(t.id) !== String(id));
+        localStorage.setItem(this.KEYS.TRANSACTIONS, JSON.stringify(newList));
     },
 
-    // --- MÉTODOS DE RECORRÊNCIA (Regras Fixas) ---
+    // --- REGRAS DE RECORRÊNCIA (Correção do Bug Zumbi) ---
 
-    // Pega todas as regras de recorrência salvas
     getRecurringRules: function() {
-        const data = localStorage.getItem(this.KEYS.RULES);
-        return JSON.parse(data) || [];
+        return JSON.parse(localStorage.getItem(this.KEYS.RULES)) || [];
     },
 
-    // Salva uma nova regra de recorrência
     saveRecurringRule: function(rule) {
-        const rules = this.getRecurringRules();
-        rules.push(rule);
-        localStorage.setItem(this.KEYS.RULES, JSON.stringify(rules));
+        const list = this.getRecurringRules();
+        // Garante que a regra tenha um histórico de gerações
+        if (!rule.generationHistory) rule.generationHistory = []; 
+        list.push(rule);
+        localStorage.setItem(this.KEYS.RULES, JSON.stringify(list));
+    },
+
+    // NOVO: Atualiza a regra (para salvar que já geramos o mês X)
+    updateRecurringRule: function(updatedRule) {
+        let list = this.getRecurringRules();
+        const index = list.findIndex(r => String(r.id) === String(updatedRule.id));
+        if (index !== -1) {
+            list[index] = updatedRule;
+            localStorage.setItem(this.KEYS.RULES, JSON.stringify(list));
+        }
     }
 };

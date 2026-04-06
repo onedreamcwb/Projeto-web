@@ -1,41 +1,47 @@
 const RecurringManager = {
-    // Verifica e gera despesas para o mês atual
-    processRecurringExpenses: function () {
+    processRecurringExpenses: function() {
         const rules = Storage.getRecurringRules();
-        const transactions = Storage.getTransactions();
-
-        const hoje = new Date();
-        const anoMesAtual = hoje.toISOString().slice(0, 7); // Ex: "2026-03"
-
-        let generatedCount = 0;
+        const today = new Date();
+        // Formato YYYY-MM (Ex: "2026-03")
+        const currentMonthKey = today.toISOString().slice(0, 7); 
+        
+        let updatesCount = 0;
 
         rules.forEach(rule => {
-            // Verifica se esta regra JÁ foi processada para ESTE mês
-            const alreadyExists = transactions.some(t =>
-                t.recurringRuleId === rule.id &&
-                t.date.startsWith(anoMesAtual)
-            );
+            // Se a regra não tiver histórico (regras antigas), cria um array vazio
+            if (!rule.generationHistory) rule.generationHistory = [];
 
-            if (!alreadyExists) {
-                // Cria a transação automaticamente
+            // VERIFICAÇÃO INTELIGENTE:
+            // "Eu já gerei esta despesa para este mês específico?"
+            if (!rule.generationHistory.includes(currentMonthKey)) {
+                
+                // 1. Cria a transação
+                // Ajusta o dia para o mês atual
+                const transactionDate = `${currentMonthKey}-${String(rule.day).padStart(2, '0')}`;
+                
                 const newTransaction = {
-                    id: Date.now() + Math.random(), // ID único
+                    id: Date.now() + Math.random(), // ID único garantido
                     description: rule.description,
                     amount: rule.amount,
                     type: rule.type,
                     category: rule.category,
-                    date: `${anoMesAtual}-${String(rule.day).padStart(2, '0')}`, // Mantém o dia original
-                    recurringRuleId: rule.id, // Vínculo com a regra
+                    date: transactionDate,
+                    recurringRuleId: rule.id,
                     createdAt: new Date().toISOString()
                 };
 
                 Storage.saveTransaction(newTransaction);
-                generatedCount++;
+
+                // 2. MARCA NA REGRA QUE JÁ FOI FEITO (A Vacina Anti-Zumbi 💉)
+                rule.generationHistory.push(currentMonthKey);
+                Storage.updateRecurringRule(rule);
+                
+                updatesCount++;
             }
         });
 
-        if (generatedCount > 0) {
-            alert(`${generatedCount} despesas fixas foram geradas automaticamente para este mês!`);
+        if (updatesCount > 0) {
+            console.log(`${updatesCount} despesas recorrentes geradas.`);
             return true; // Indica que houve mudanças
         }
         return false;
